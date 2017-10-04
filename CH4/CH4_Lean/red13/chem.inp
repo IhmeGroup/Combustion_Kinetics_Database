@@ -1,0 +1,27 @@
+!
+!     A 13 species reduced mechanism for lean atmospheric CH4/air
+!
+!     Contact: 
+!     Tianfeng Lu
+!     University of Connecticut
+!     Email: tlu@engr.uconn.edu
+!
+!     Reference:
+!     R. Sankaran, E.R. Hawkes, J.H. Chen, T.F. Lu, C.K. Law, 
+!     "Structure of a spatially developing turbulent lean methane–air Bunsen flame," 
+!     Proceedings of the Combustion Institute 31 (2007) 1291–1298.
+!
+
+ELEMENTS
+O	H	C	N	AR	
+END
+
+SPECIES
+H2	H	O	O2
+OH	H2O	HO2	CH3
+CH4	CO	CO2	CH2O
+N2	
+END
+
+REACTIONS
+END
