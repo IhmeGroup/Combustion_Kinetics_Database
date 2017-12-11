@@ -1,0 +1,46 @@
+!****************************************************************************
+!
+! A 26-species reduced model for Cat C1 
+! Developed by Yang Gao, Tianfeng Lu (tianfeng.lu@uconn.edu)
+! University of Connecticut
+!
+! based on
+!
+! Reaction model for POSF11498 (Cat C1)
+! Version 2.0
+!
+!****************************************************************************
+! Title: "A experiment-based lumped model of jet fuel combustion at high temperatures"
+!
+! Hai Wang, Ray Xu, David F. Davidson, Sayak Banerjee, Tom Bowman, Ronald K. Hanson
+! Mechanical Engineering, Stanford University                   
+! Stanford, CA 94305                                     
+!
+! May 24, 2016          
+!
+! Model description: Six reaction steps to describe POSF10325 thermal decomposition
+!                    and USC Mech II as the foundational fuel chemistry model
+!
+! The cracked products considered are CH4, C2H4, C3H6, iC4H8, benzene, tuluene, CH3 and H.  
+! The oxidation kinetics of these cracking products are described by USC Mech II.
+!
+! Please contact Hai Wang at haiwang@stanford.edu for questions and comments. 
+!
+!============================================================================  
+
+ELEMENTS
+O H C N 
+END
+
+SPECIES
+POSF11498       	iC4H8           	H2              	C3H6            	
+C2H4            	CH4             	C2H6            	pC3H4           	
+CO              	C2H2            	CH3             	O2              	
+O               	OH              	HO2             	H2O             	
+H2O2            	H               	CH2O            	CO2             	
+C2H5            	CH2CO           	C3H3            	CH3CCH2         	
+iC4H7           	N2              	
+END
+
+REACTIONS
+END

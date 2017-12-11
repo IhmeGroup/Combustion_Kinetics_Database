@@ -1,0 +1,483 @@
+!****************************************************************************
+!
+! A 34-species skeletal model for Cat C1 
+! Developed by Yang Gao, Tianfeng Lu (tianfeng.lu@uconn.edu)
+! University of Connecticut
+!
+! based on
+!
+! Reaction model for POSF11498 (Cat C1)
+! Version 2.0
+!
+!****************************************************************************
+! Title: "A experiment-based lumped model of jet fuel combustion at high temperatures"
+!
+! Hai Wang, Ray Xu, David F. Davidson, Sayak Banerjee, Tom Bowman, Ronald K. Hanson
+! Mechanical Engineering, Stanford University                   
+! Stanford, CA 94305                                     
+!
+! May 23, 2016       
+!
+! Model description: Seven reaction steps to describe POSF11498 thermal decomposition
+!                    and USC Mech II as the foundational fuel chemistry model
+!
+! The cracked products considered are CH4, C2H4, C3H6, iC4H8, benzene, tuluene, CH3 and H.  
+! The oxidation kinetics of these cracking products are described by USC Mech II.
+!
+! Please contact Hai Wang at haiwang@stanford.edu for questions and comments. 
+!
+!============================================================================  
+ELEMENTS
+O  H  C  N  AR  HE
+END       
+
+
+
+
+
+SPECIES
+POSF11498        iC4H8            H2               C3H6             
+C2H4             CH4              C2H6             pC3H4            
+CO               C2H2             CH3              O2               
+O                OH               HO2              H2O              
+H2O2             H                CH2              CH2*             
+HCO              CH2O             CH3O             CO2              
+C2H3             C2H5             HCCO             CH2CO            
+CH3CO            C3H3             CH3CCH2          iC4H7            
+iC4H7-1          N2               
+END
+
+
+
+
+
+REACTIONS
+!R1
+POSF11498    =>2.4625807iC4H8+0.5710129C3H6+0.2461822C2H4+1.055726H+0.944274CH3 2.83E+26 -2.58 80197.0
+!R2
+POSF11498+H  =>H2+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 8.72E+05  2.40 2580.0
+!R3
+POSF11498+CH3=>CH4+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 4.64E+00  3.46 4600.0
+!R4
+POSF11498+OH =>H2O+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 4.88E+10  0.51 64.0
+!R5
+POSF11498+O2 =>HO2+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 1.49E+15  0.00 44000.0
+!R6
+POSF11498+HO2=>H2O2+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 5.83E+04  2.77 10500.0
+!R7
+POSF11498+O  =>OH+2.6513789iC4H8+0.6147906C3H6+0.2650562C2H4+0.98H+0.02CH3 7.85E+04  2.50 1110.0
+!R8
+ H+O2 = O+OH                                  2.644E+16  -0.6707 17041.00 !GRI3.0 * 1.00
+!R9
+ O+H2 = H+OH                                  4.589E+04   2.700   6260.00 !GRI3.0 * 1.19
+!R10
+ OH+H2 = H+H2O                                1.734E+08   1.510   3430.00 !GRI3.0 * 0.80
+!R11
+ OH+OH = O+H2O                                3.973E+04   2.400  -2110.00 !GRI3.0 * 1.11
+!R12
+ H+H+M = H2+M                                 1.780E+18  -1.000      0.00 !GRI3.0 * 1.78
+                                         H2/0.0/ H2O/0.0/ CO2/0.0/ 
+!R13
+ H+H+H2O = H2+H2O                             5.624E+19  -1.250      0.00 !GRI3.0 * 0.94
+!R14
+ H+OH+M = H2O+M                               4.400E+22  -2.000      0.00 !GRI3.0 * 2.00
+                               H2/2.0/ H2O/6.30/ CO/1.75/ CO2/3.6/  
+!R15
+ O+H+M = OH+M                                 9.428E+18  -1.000      0.00  !86TSA/HAM * 2.00
+                                H2/2.0/ H2O/12.0/ CO/1.75/ CO2/3.6/  
+!R16
+ O+O+M = O2+M                                 1.200E+17  -1.000      0.00 !GRI3.0
+                              H2/2.4/ H2O/15.4/  CO/1.75/ CO2/3.6/  
+!R17
+ H+O2(+M) = HO2(+M)                           5.116E+12   0.440     0.00 !00 TROE - Based on M=N2 * 1.10
+                                        LOW / 6.328E+19  -1.400     0.00 /
+                                        TROE/ 0.5  1E-30  1E+30            /
+                            O2/0.85/  H2O/11.89/ CO/1.09/ CO2/2.18/ 
+!R18
+ H2+O2 = HO2+H                                5.916E+05   2.433  53502.00 !00MIC/SUT * 0.80
+!R19
+ OH+OH(+M) = H2O2(+M)                         1.110E+14  -0.370      0.00 !88ZEL/EWI * 1.50
+                                      LOW  /  2.010E+17  -0.584  -2293.00 /!Fit 88ZEL/EWI and 92BAU/COB
+                                      TROE / 0.7346   94.  1756.00  5182.0 /!H2O=6xN2 88ZEL/EWI
+                                 H2/2.0/ H2O/6.00/ CO/1.75/ CO2/3.6/ 
+!R20
+ HO2+H = OH+OH                                7.485E+13    0.000   295.00 !99MUE/KIM * 1.06
+!R21
+ HO2+O = OH+O2                                4.000E+13    0.000     0.00 !GRI3.0 * 2.00
+!R22
+ HO2+HO2 = O2+H2O2                            1.300E+11    0.000 -1630.00 !90HIP/TRO
+  DUPLICATE
+!R23
+ HO2+HO2 = O2+H2O2                            3.658E+14    0.000 12000.00 !90HIP/TRO * 0.87
+  DUPLICATE
+!R24
+ OH+HO2=H2O+O2                                1.41E+18    -1.760    60.0 ! Wang07 
+  Duplicate
+!R25
+ OH+HO2=H2O+O2                                5.37E+70   -16.720 32900.0 ! Wang07
+  Duplicate
+!R26
+ OH+HO2=H2O+O2                                2.51E+12     2.000 40000.0 ! Wang07
+  Duplicate
+!R27
+ H2O2+H = HO2+H2                              6.050E+06    2.000   5200.00 !GRI3.0 * 0.50
+!R28
+ H2O2+H = OH+H2O                              2.410E+13    0.000   3970.00 !86TSA/HAM
+!R29
+ H2O2+O = OH+HO2                              9.630E+06    2.000   3970.00 !86TSA/HAM
+!R30
+ H2O2+OH = HO2+H2O                            2.670E+41   -7.000  37600.00 !Refit95HIP/NEU
+!R31
+ CO+O(+M)=CO2(+M)                             1.362E+10    0.000   2384.00 !99MUE/KIM * 0.76
+                                        LOW / 1.173E+24   -2.79    4191.   / 
+                                   H2/2.0/ H2O/12/ CO/1.75/ CO2/3.6/ 
+!R32
+ CO+OH = CO2+H                                7.046E+04    2.053  -355.67  !06JOS/WANG
+   DUPLICATE
+!R33
+ CO+OH = CO2+H                                5.757E+12   -0.664   331.83  !06JOS/WANG
+   DUPLICATE
+!R34
+ CO+O2 = CO2+O                                1.119E+12    0.000  47700.00 !86TSA/HAM * 0.44
+!R35
+ CO+HO2 = CO2+OH                              1.570E+05    2.180  17942.61 !07YOU/WANG
+!R36
+ HCO+H = CO+H2                                1.200E+14    0.000      0.00 !02FRI/DAV * 1.00
+!R37
+ HCO+O = CO+OH                                3.000E+13    0.000      0.00 !GRI3.0
+!R38
+ HCO+O = CO2+H                                3.000E+13    0.000      0.00 !GRI3.0
+!R39
+ HCO+OH = CO+H2O                              3.020E+13    0.000      0.00 !86TSA/HAM
+!R40
+ HCO+M = CO+H+M                               1.870E+17   -1.000  17000.00 !02FRI/DAV * 2.00
+                                              H2/2.0/ H2O/0.0/ CO/1.75/ CO2/3.6/
+!R41
+ HCO+H2O = CO+H+H2O                           2.244E+18   -1.000  17000.00 !12xM * 2.00
+!R42
+ HCO+O2 = CO+HO2                              1.204E+10    0.807   -727.00 !96HSU/MEB
+!R43
+CO+H2(+M) = CH2O(+M)                          4.300E+07    1.500  79600.00  !GRI
+                                      LOW  /  5.070E+27   -3.420  84350.00  /
+                                      TROE/  0.9320  197.00  1540.00 10300. /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R44
+ HCO+H(+M) = CH2O(+M)                         1.090E+12    0.480   -260.00  !GRI
+                                      LOW  /  1.350E+24   -2.570   1425.00  /
+                                      TROE/  0.7824  271.0  2755.00  6570.0 /
+                H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R45
+ CH2+H(+M) = CH3(+M)                          2.500E+16   -0.800      0.00  !GRI
+                                      LOW  /  3.200E+27   -3.140   1230.00  /
+                                      TROE/  0.6800   78.00  1995.0  5590.0 /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R46
+ CH2+O = HCO+H                                8.000E+13    0.000      0.00  !GRI
+!R47
+ CH2+OH = CH2O+H                              2.000E+13    0.000      0.00  !GRI
+!R48
+ CH2+H2 = H+CH3                               5.000E+05    2.000   7230.00  !GRI
+!R49
+ CH2+O2 = HCO+OH                              1.060E+13    0.000   1500.00  !GRI##
+!R50
+ CH2+O2 = CO2+H+H                             2.640E+12    0.000   1500.00  !GRI##
+!R51
+ CH2+CO(+M) = CH2CO(+M)                       8.100E+11    0.500   4510.00  !GRI
+                                      LOW  /  2.690E+33   -5.110   7095.00  /
+                                      TROE/ 0.5907  275.0  1226.00  5185.00 /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R52
+ CH2*+N2 = CH2+N2                             1.500E+13    0.000    600.00  !GRI
+!R53
+ CH2*+O = CO+H2                               1.500E+13    0.000      0.00  !GRI
+!R54
+ CH2*+OH = CH2O+H                             3.000E+13    0.000      0.00  !GRI
+!R55
+ CH2*+H2 = CH3+H                              7.000E+13    0.000      0.00  !GRI
+!R56
+ CH2*+O2 = H+OH+CO                            2.800E+13    0.000      0.00  !GRI
+!R57
+ CH2*+O2 = CO+H2O                             1.200E+13    0.000      0.00  !GRI
+!R58
+ CH2*+H2O = CH2+H2O                           3.000E+13    0.000      0.00  !GRI
+!R59
+ CH2*+CO = CH2+CO                             9.000E+12    0.000      0.00  !GRI
+!R60
+ CH2*+CO2 = CH2+CO2                           7.000E+12    0.000      0.00  !GRI
+!R61
+ CH2*+CO2 = CH2O+CO                           1.400E+13    0.000      0.00  !GRI
+!R62
+ CH2O+H(+M) = CH3O(+M)                        5.400E+11    0.454   2600.00  !GRI
+                                      LOW  /  2.200E+30   -4.800   5560.00  /
+                                      TROE/  0.7580   94.00  1555.0 4200.00 /
+                         H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R63
+ CH2O+H = HCO+H2                              2.300E+10    1.050   3275.00  !GRI
+!R64
+ CH2O+O = HCO+OH                              3.900E+13    0.000   3540.00  !GRI
+!R65
+ CH2O+OH = HCO+H2O                            3.430E+09    1.180   -447.00  !GRI
+!R66
+ CH2O+O2 = HCO+HO2                            1.000E+14    0.000  40000.00  !GRI
+!R67
+ CH2O+HO2 = HCO+H2O2                          1.000E+12    0.000   8000.00  !GRI
+!R68
+ CH3+H(+M) = CH4(+M)                          1.270E+16   -0.630    383.00  !GRI
+                                     LOW  /   2.477E+33   -4.760   2440.00  /
+                                     TROE/  0.7830   74.00  2941.00  6964.0 /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R69
+ CH3+O = CH2O+H                               8.430E+13    0.000      0.00  !GRI
+!R70
+ CH3+OH = CH2+H2O                             5.600E+07    1.600   5420.00  !GRI
+!R71
+ CH3+OH = CH2*+H2O                            2.501E+13    0.000      0.00  !GRI
+!R72
+ CH3+O2 = O+CH3O                              3.083E+13    0.000  28800.00  !GRI
+!R73
+ CH3+O2 = OH+CH2O                             3.600E+10    0.000   8940.00  !GRI 
+!R74
+ CH3+HO2 = CH4+O2                             1.000E+12    0.000      0.00  !GRI
+!R75
+ CH3+HO2 = CH3O+OH                            1.340E+13    0.000      0.00  !GRI
+!R76
+ CH3+H2O2 = CH4+HO2                           2.450E+04    2.470   5180.00  !GRI
+!R77
+ CH3+HCO = CH4+CO                             8.480E+12    0.000      0.00  !GRI
+!R78
+ CH3+CH2O = CH4+HCO                           3.320E+03    2.810   5860.00  !GRI
+!R79
+ CH3+CH2 = C2H4+H                             4.000E+13    0.000      0.00  !GRI
+!R80
+ CH3+CH3(+M) = C2H6(+M)                       2.120E+16   -0.970    620.00  !GRI
+                                      LOW  /  1.770E+50   -9.670   6220.00  /
+                                      TROE/  0.5325  151.0  1038.00  4970.0 /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R81
+ CH3+CH3 = H+C2H5                             4.990E+12    0.100  10600.00  !GRI
+!R82
+ CH3+HCCO = C2H4+CO                           5.00E+13     0.0        0.0   !Estimated
+!R83
+ CH3O+H = CH2O+H2                             2.000E+13    0.000      0.00  !GRI
+!R84
+ CH3O+H = CH3+OH                              3.200E+13    0.000      0.00  !GRI
+!R85
+ CH3O+H = CH2*+H2O                            1.600E+13    0.000      0.00  !GRI
+!R86
+ CH3O+O = CH2O+OH                             1.000E+13    0.000      0.00  !GRI
+!R87
+ CH3O+OH = CH2O+H2O                           5.000E+12    0.000      0.00  !GRI
+!R88
+ CH3O+O2 = CH2O+HO2                           4.280E-13    7.600  -3530.00  !GRI
+!R89
+ CH4+H = CH3+H2                               6.600E+08    1.620 10840.00   !GRI
+!R90
+ CH4+O = CH3+OH                               1.020E+09    1.500  8600.00   !GRI
+!R91
+ CH4+OH = CH3+H2O                             1.000E+08    1.600  3120.00   !GRI
+!R92
+ HCCO+H = CH2*+CO                             1.000E+14    0.000     0.00   !GRI
+!R93
+ HCCO+O = H+CO+CO                             1.000E+14    0.000     0.00   !GRI
+!R94
+ HCCO+O2 = OH+2CO                             1.600E+12    0.000   854.00   !GRI
+!R95
+ C2H3 (+M) = C2H2+H (+M)                      3.860E+08    1.620  37048.2   !96KNY/SLA
+                                      LOW  /  2.565E+27   -3.400  35798.72  /
+                                      TROE/  1.9816  5383.7  4.2932 -0.0795 /
+      H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/ C2H2/3.00/ 
+                                                                   C2H4/3.00/
+!R96
+ C2H2+O = CH2+CO                              4.080E+06    2.000   1900.00  !GRI (0.2 branching ratio)
+!R97
+ C2H2+O = HCCO + H                            1.632E+07    2.000   1900.00  !GRI (0.8 branching ratio)
+!R98
+ C2H2+OH = CH2CO+H                            2.180E-04    4.500  -1000.00  !GRI
+!R99
+ C2H2+HCO = C2H3+CO                           1.000E+07    2.000   6000.00  !Estimated
+!R100
+ C2H2+CH2 = C3H3+H                            1.200E+13    0.000   6620.00  !88BOH/TEM; 86FRA/BHA
+!R101
+ C2H2+CH2* = C3H3+H                           2.000E+13    0.000      0.00  !97WAN/FRE
+!R102
+ C2H2+CH3 = pC3H4+H                           2.56E+09     1.10    13644.0  !99DAV/LAW RRKM 1 atm 
+!R103
+ C2H2+CH3 = CH3CCH2                           4.99E+22    -4.39    18850.0  !99DAV/LAW RRKM 1 atm
+!R104
+ CH2CO+H = HCCO+H2                            5.000E+13    0.000    8000.00 !GRI
+!R105
+ CH2CO+H = CH3+CO                             1.500E+09    1.430    2690.00 !calculated RRKM    
+!R106
+ CH2CO+O = HCCO+OH                            1.000E+13    0.000    8000.00 !GRI
+!R107
+ CH2CO+OH = HCCO+H2O                          7.500E+12    0.000    2000.00 !GRI
+!R108
+ C2H3+H(+M) = C2H4(+M)                        6.080E+12    0.270     280.00 !GRI1.2
+                                      LOW  /  1.400E+30   -3.860    3320.00 /
+                                     TROE/  0.7820  207.50  2663.00  6095.00/
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/ 
+                                                        C2H2/3.00/ C2H4/3.00/
+!R109
+ C2H3+H = C2H2+H2                             9.000E+13    0.000       0.00 !86TSA/HAM
+!R110
+ C2H3+O = CH2CO+H                             4.800E+13    0.000       0.00 !86TSA/HAM
+!R111
+ C2H3+O = CH3+CO                              4.800E+13    0.000       0.00 !86TSA/HAM
+!R112
+ C2H3+OH = C2H2+H2O                           3.011E+13    0.000       0.00 !86TSA/HAM
+!R113
+ C2H3+O2 = C2H2+HO2                           1.340E+06    1.610    -383.40 !96MEB/DIA
+!R114
+ C2H3+O2 = HCO+CH2O                           4.600E+16   -1.390    1010.00 !96MEB/DIA
+!R115
+ C2H3+CH3 (+M) = C3H6(+M)                     2.500E+13    0.000       0.00 !86TSA/HAM
+                                       LOW  / 4.270E+58  -11.940    9769.80 /
+                                       TROE / 0.175  1340.6 60000.0 10139.8 /
+      H2/2/ H2O/6/ CH4/2/ CO/1.5/ CO2/2/ C2H6/3/C2H2/3.00/ C2H4/3.00/
+!R116
+ CH3+CO (+M) = CH3CO (+M)                     4.850E+07    1.650    6150.00 !kinf, RRKM
+                                     LOW     /7.800E+30   -5.395    8600.00 /         
+                                     TROE    /0.258 598. 21002. 1773.       /
+     H2/2/ H2O/6/ CH4/2/ CO/1.5/ CO2/2/ C2H6/3/ C2H2/3.00/ C2H4/3.00/
+!R117
+ CH3CO+H = CH3+HCO                            9.600E+13    0.000      0.00  !86TSA/HAM
+!R118
+ CH3CO+O = CH2CO+OH                           3.900E+13    0.000      0.00  !92BAU/COB
+!R119
+ CH3CO+O = CH3+CO2                            1.500E+14    0.000      0.00  !86TSA/HAM; 92BAU/COB
+!R120
+ CH3CO+OH = CH2CO+H2O                         1.200E+13    0.000      0.00  !86TSA/HAM
+!R121
+ CH3CO+OH = CH3+CO+OH                         3.000E+13    0.000      0.00  !86TSA/HAM
+!R122
+ CH3CO+HO2 = CH3+CO2+OH                       3.000E+13    0.000      0.00  !86TSA/HAM
+!R123
+ C2H4+H(+M) = C2H5(+M)                        1.37E+09     1.463   1355.      	!F=2	MK04, corrected from initial USC Mech II     	
+	LOW		               /2.90E+39       -6.642	  5769./ 	!	MK04     
+	TROE/1.569	-9147	299	152.4/  
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R124
+ C2H4+H = C2H3+H2                             5.070E+07    1.900  12950.00  !96KNY/BEN
+!R125
+ C2H4+O = C2H3+OH                             1.510E+07    1.900   3740.00  !87MAH/MAR
+!R126
+ C2H4+O = CH3+HCO                             1.920E+07    1.830    220.00  !87MAH/MAR
+!R127
+ C2H4+OH = C2H3+H2O                           3.600E+06    2.000   2500.00  !88LIU/MUL1
+!R128
+ C2H4+HCO = C2H5+CO                           1.000E+07    2.000   8000.00  !Estimated
+!R129
+ C2H4+CH3 = C2H3+CH4                          2.270E+05    2.000   9200.00  !GRI
+!R130
+ C2H5+H(+M) = C2H6(+M)                        5.210E+17   -0.990  1580.00   !GRI
+                                       LOW  / 1.990E+41   -7.080  6685.00   /
+                                       TROE / 0.8422  125.0  2219.00 6882.0 /
+                 H2/2.0/ H2O/6.0/ CH4/2.0/ CO/1.5/ CO2/2.0/ C2H6/3.0/
+!R131
+ C2H5+O = CH3+CH2O                            1.604E+13    0.000     0.00   !86TSA/HAM
+!R132
+ C2H5+O2 = C2H4+HO2                           2.000E+10    0.000     0.00   !90BOZ/DEA
+!R133
+ C2H5+HO2 = CH3+CH2O+OH                       2.400E+13    0.000     0.00   !86TSA/HAM
+!R134
+ C2H6+H = C2H5+H2                             1.15E+08    1.900   7530.00   !GRI
+!R135
+ C2H6+O = C2H5+OH                             8.98E+07    1.920   5690.00   !GRI
+!R136
+ C2H6+OH = C2H5+H2O                           3.54E+06    2.120    870.00   !GRI
+!R137
+ C2H6+CH3 = C2H5+CH4                          6.14E+06    1.740  10450.00   !GRI
+!R138
+ C3H3+H = pC3H4                               1.50E+13    0.0        0.0    !Estimated
+!R139
+ C3H3+O2 = CH2CO+HCO                          3.00E+10    0.0     2868.0    !88SLA/GUT
+!R140
+ C3H3+HO2 = OH+CO+C2H3                        8.00E+11    0.0        0.0    !Estimated
+!R141
+ C3H3+HO2 = pC3H4+O2                          2.50E+12    0.0        0.0    !99DAV/LAW 
+!R142
+ C3H3+HCO = pC3H4+CO                          2.50E+13    0.0        0.0    !Estimated
+!R143
+ pC3H4+H = CH3CCH2                            1.66E+47 -10.58    13690.0    !99DAV/LAW RRKM 1 atm
+!R144
+ pC3H4+H = C3H3+H2                            1.30E+06   2.0      5500.0    !97WAN/FRE
+!R145
+ pC3H4+O = HCCO+CH3                           0.73E+13   0.0      2250.0    !96ADU/BLU#
+!R146
+ pC3H4+O = C2H4+CO                            1.00E+13   0.0      2250.0    !96ADU/BLU#
+!R147
+ pC3H4+OH = C3H3+H2O                          1.00E+06   2.0       100.0    !98DAV/LAW 
+!R148
+ pC3H4+CH3 = C3H3+CH4                         1.80E+12   0.0      7700.0    !87WU/KER
+!R149
+ CH3CCH2+H = pC3H4+H2                         3.34E+12   0.00        0.0    !99DAV/LAW 
+!R150
+ CH3CCH2+O = CH3+CH2CO                        6.00E+13   0.00        0.0    !Estimated
+!R151
+ CH3CCH2+OH = CH3+CH2CO+H                     5.00E+12   0.00        0.0    !Estimated
+!R152
+ CH3CCH2+O2 = CH3CO+CH2O                      1.00E+11   0.00        0.0    !99DAV/LAW 
+!R153
+ CH3CCH2+HO2 = CH3+CH2CO+OH                   2.00E+13   0.00        0.0    !Estimated
+!R154
+ CH3CCH2+HCO = C3H6+CO                        9.00E+13   0.00        0.0    !Estimated
+!R155
+ CH3CCH2+CH3 = iC4H8                          2.00E+13   0.00        0.0    ! PW P   
+!R156
+  C3H6+H = C2H4+CH3                            2.50E+18  -1.312  8084.1   !Kun from propene paper
+!R157
+ C3H6+H = CH3CCH2+H2                          4.00E+05   2.50     9790.0    !91TSA 
+!R158
+ C3H6+O = CH2CO+CH3+H                         0.80E+08   1.65      327.0    !91TSA 
+!R159
+ C3H6+O = C2H5+HCO                            3.50E+07   1.65     -972.0    !91TSA 
+!R160
+ C3H6+O = CH3CCH2+OH                          6.00E+10   0.70     7630.0    !91TSA 
+!R161
+ C3H6+OH = CH3CCH2+H2O                        1.10E+06   2.00     1450.0    !91TSA 
+!R162
+ iC4H7+H(+M) = iC4H8(+M)                      1.00E+14   0.00         0.0   ! =(aC3H5+H) TS5 600cm-1 / 2
+                                       LOW  / 6.70E+59 -12.00      5967.8   /
+                                       TROE / 0.020  1096.6  1096.6  6859.5 /
+                           H2/2/ H2O/6/ CH4/2/ CO/1.5/ CO2/2/ C2H6/3/
+!R163
+ iC4H7+H = CH3CCH2+CH3                        1.30E+45  -8.19     37890.0   ! =(aC3H5+H) TS5 1 atm /2 
+!R164
+ iC4H7+O = CH2O+CH3CCH2                       9.00E+13   0.00         0.0   ! Estimated
+!R165
+ iC4H7+HO2 = CH3CCH2+CH2O+OH                  1.00E+13   0.00         0.0   ! Estimated 
+!R166
+ iC4H7+O2 = CH2O+CH2CO+CH3                    1.65E+14 -0.704 20711.0       ! Sum of aC3H5 + O2                  
+!R167
+ iC4H7+O2 = C2H4+CH2CO+OH                     1.65E+14 -0.704 20711.0       ! Sum of aC3H5 + O2
+!R168
+ iC4H8+H = iC4H7+H2                   4.36E+06	2.3	4430	!HHC, JPC 2009
+!R169
+ iC4H8+H  <=> C3H6+CH3                         6.16E+22   -2.538   11629.     ! KW; 01-28-16; 1.0E+00 atm !N2;  300-1500K;  7% err
+!R170
+ iC4H8+O = CH3+CH3+CH2CO                      2.40E+08   1.65       327.0   ! =(C3H6+O) TS5 * 2 due to symmetry
+!R171
+ iC4H8+O = iC4H7+OH                           1.93E+05   2.50      3640.0   ! =(iC4H10+O)*2/3 TS4 * corrected w symmetry etc
+!R172
+ iC4H8+OH = iC4H7+H2O                         1.00E+08   1.53       775.0   ! =(iC4H10+OH)*2/3 TS4 * corrected
+!R173
+ iC4H8+HO2 = iC4H7+H2O2                       1.33E+04   2.55     15500.0   ! =(iC4H10+HO2)*2/3 TS4 * corrected
+!R174
+ iC4H8+HO2 = CH2O+C3H6+OH                     2.18E+12   0.00    14200.00   ! =(C3H6+HO2) * 2
+!R175
+ iC4H8+CH3 = iC4H7+CH4                         8.91E+01   3.218     7035.0   ! Kun 2014 CBS-QB3
+!R176
+ iC4H8+H=iC4H7-1+H2    4.80E+08    1.50    11452.  !EST SP2 
+!R177
+ iC4H8+CH3=iC4H7-1+CH4  1.83E+03  2.886   14128        !CBS-QB3
+!R178
+ iC4H8+OH=iC4H7-1+H2O    4.50E+12    0.0    3060  !
+!R179
+ iC4H8+O=iC4H7-1+OH    3.00E+12    0.0    4500  !
+!R180
+ iC4H8+O2=iC4H7-1+HO2    2.00E+13    0.0    43500  !
+!R181
+ iC4H7-1=CH3+pC3H4     1.3E+14  0.0   37000  !
+!R182
+ iC4H7-1=iC4H7                5E+12  0.0   36000     !
+END
